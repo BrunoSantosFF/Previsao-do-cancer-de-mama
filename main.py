@@ -26,6 +26,9 @@ df = df.drop(columns=['id', 'Unnamed: 32'])
 #substitui valores categóricos por valores numéricos na coluna diagnosis
 df['diagnosis'] = df['diagnosis'].map({'M':1,'B':0})
 
+#verifica se existe alguma coluna com dados vazios
+#print(df.isnull().sum())
+
 #fornece informações sobre a distribuição e principais medidas de tendência central e dispersão
 #print(df.describe())
 
@@ -55,4 +58,4 @@ predictor = ['radius_mean','perimeter_mean','area_mean','compactness_mean','conc
 #modelo escolhido
 model=LogisticRegression()
 #função para a classificação
-classification_model(model,traindf,predictor,"diagnosis")
+#classification_model(model,traindf,predictor,"diagnosis")
