@@ -48,3 +48,5 @@ dfB=df[df['diagnosis'] ==0]
 traindf, testdf = train_test_split(df, test_size=0.3, random_state=42, stratify=df['diagnosis'])
 
 #statify_preview(df,traindf,testdf)
+
+##================## Modelo de Classificação ##================##

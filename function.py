@@ -1,4 +1,31 @@
 import matplotlib.pyplot as plt 
+from sklearn.model_selection import cross_val_score
+from sklearn.metrics import accuracy_score
+
+
+
+def classification_model(model, data, predictors, outcome):
+    # Treina o modelo
+    model.fit(data[predictors], data[outcome])
+    
+    # Faz previsões no conjunto de treinamento
+    predictions = model.predict(data[predictors])
+    
+    # Imprime a acurácia no conjunto de treinamento
+    accuracy = accuracy_score(data[outcome], predictions)
+    print("Acurácia no conjunto de treinamento: %s" % "{0:.3%}".format(accuracy))
+
+    # Realiza a validação cruzada k-fold com 5 dobras
+    cross_val_scores = cross_val_score(model, data[predictors], data[outcome], cv=5)
+
+    # Imprime as pontuações de validação cruzada
+    print("Pontuações de Validação Cruzada: ", cross_val_scores)
+    print("Média das Pontuações de Validação Cruzada: %s" % "{0:.3%}".format(cross_val_scores.mean()))
+
+    # Ajusta o modelo novamente para que possa ser referenciado fora da função
+    model.fit(data[predictors], data[outcome])
+
+
 
 def plot_attribute_graphs(features_mean, dfM, dfB):
   # Definir o tamanho do gráfico
