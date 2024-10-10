@@ -20,3 +20,14 @@ def plot_attribute_graphs(features_mean, dfM, dfB):
 
 #Observe os grafico que é mais envolvido com os tumores malignos
 #radius, perimeter, area, compactness, concavity and concave points
+
+def statify_preview(df,traindf,testdf):
+  # Verificando a proporção das classes
+  print("Proporção no Conjunto Completo:")
+  print(df['diagnosis'].value_counts(normalize=True))
+
+  print("\nProporção no Conjunto de Treinamento:")
+  print(traindf['diagnosis'].value_counts(normalize=True))
+
+  print("\nProporção no Conjunto de Teste:")
+  print(testdf['diagnosis'].value_counts(normalize=True))

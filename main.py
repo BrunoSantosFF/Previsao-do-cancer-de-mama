@@ -13,7 +13,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.tree import DecisionTreeClassifier, export_graphviz
 from sklearn import metrics
 
-from function import plot_attribute_graphs
+from function import plot_attribute_graphs,statify_preview
 
 ##================## Lendo o database ##================##
 df = pd.read_csv("database/data.csv",header = 0)
@@ -41,4 +41,10 @@ dfM=df[df['diagnosis'] ==1]
 dfB=df[df['diagnosis'] ==0]
 
 #plotando graficos para ter noção dos melhores atributos
-plot_attribute_graphs(features_mean,dfM,dfB)
+#plot_attribute_graphs(features_mean,dfM,dfB)
+
+##================## Treinando e Testando ##================##
+
+traindf, testdf = train_test_split(df, test_size=0.3, random_state=42, stratify=df['diagnosis'])
+
+#statify_preview(df,traindf,testdf)
