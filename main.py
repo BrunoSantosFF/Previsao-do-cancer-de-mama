@@ -13,6 +13,8 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.tree import DecisionTreeClassifier, export_graphviz
 from sklearn import metrics
 
+from function import plot_attribute_graphs
+
 ##================## Lendo o database ##================##
 df = pd.read_csv("database/data.csv",header = 0)
 #imprimindo uma parte dos dados do DB
@@ -37,3 +39,6 @@ features_mean=list(df.columns[1:11])
 #Passando para um novo dataframe, porém separando os tumores malignos dos benignos
 dfM=df[df['diagnosis'] ==1]
 dfB=df[df['diagnosis'] ==0]
+
+#plotando graficos para ter noção dos melhores atributos
+plot_attribute_graphs(features_mean,dfM,dfB)
