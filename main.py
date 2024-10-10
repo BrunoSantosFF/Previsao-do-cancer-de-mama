@@ -13,7 +13,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.tree import DecisionTreeClassifier, export_graphviz
 from sklearn import metrics
 
-from function import plot_attribute_graphs,statify_preview
+from function import plot_attribute_graphs,statify_preview,classification_model
 
 ##================## Lendo o database ##================##
 df = pd.read_csv("database/data.csv",header = 0)
@@ -50,3 +50,9 @@ traindf, testdf = train_test_split(df, test_size=0.3, random_state=42, stratify=
 #statify_preview(df,traindf,testdf)
 
 ##================## Modelo de Classificação ##================##
+#lista com atributos que foram escolhidos para terem relação com previsão
+predictor = ['radius_mean','perimeter_mean','area_mean','compactness_mean','concave points_mean']
+#modelo escolhido
+model=LogisticRegression()
+#função para a classificação
+classification_model(model,traindf,predictor,"diagnosis")
