@@ -11,6 +11,29 @@ from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, classification_report, confusion_matrix,ConfusionMatrixDisplay
 
 
+def print_model_evaluation(rf_f1, knn_f1, svm_f1, rf_cm, knn_cm, svm_cm, 
+                            y_test, rf_pred, knn_pred, svm_pred):
+    print('Mean f1 scores:')
+    print('RF mean :', rf_f1)
+    print('KNN mean :', knn_f1)
+    print('SVM mean :', svm_f1)
+
+    print("======== Random Forest ========")
+    print(rf_cm)
+    print(classification_report(y_test, rf_pred))
+    print('Accuracy Score: ', accuracy_score(y_test, rf_pred))
+
+    print("======== KNN ========")
+    print(knn_cm)
+    print(classification_report(y_test, knn_pred))
+    print('Accuracy Score: ', accuracy_score(y_test, knn_pred))
+
+    print("======== SVM ========")
+    print(svm_cm)
+    print(classification_report(y_test, svm_pred))
+    print('Accuracy Score: ', accuracy_score(y_test, svm_pred))
+
+
 def evaluate_models(models, X_train, y_train, scoring_metrics):
     for name_model, model in models.items():
         print(f"Modelo: {name_model}")

@@ -27,7 +27,7 @@ from sklearn.preprocessing import StandardScaler
 from imblearn.over_sampling import SMOTE
 from sklearn.model_selection import cross_val_score
 
-from function import plot_attribute_graphs,statify_preview,plot_graphic_pie,evaluate_models
+from function import plot_attribute_graphs,statify_preview,plot_graphic_pie,evaluate_models,print_model_evaluation
 
 
 ##================## Lendo o database ##================##
@@ -142,21 +142,5 @@ rf_f1  = f1_score(y_test,rf_pred)
 knn_f1 = f1_score(y_test,knn_pred)
 svm_f1 = f1_score(y_test,svm_pred)
 
-print('Mean f1 scores:')
-
-print('RF mean :',rf_f1)
-print('KNN mean :',knn_f1)
-print('SVM mean :',svm_f1)
-
-print("======== Random Forest ========")
-print(rf_cm)
-print(classification_report(y_test,rf_pred))
-print('Accuracy Score: ',accuracy_score(y_test,rf_pred))
-print("======== KNN ========")
-print(knn_cm)
-print(classification_report(y_test,knn_pred))
-print('Accuracy Score: ',accuracy_score(y_test,knn_pred))
-print("======== SVM ========")
-print(svm_cm)
-print(classification_report(y_test,svm_pred))
-print('Accuracy Score: ',accuracy_score(y_test,svm_pred))
+# Chame a função com os dados necessários
+print_model_evaluation(rf_f1, knn_f1, svm_f1, rf_cm, knn_cm, svm_cm, y_test, rf_pred, knn_pred, svm_pred)
