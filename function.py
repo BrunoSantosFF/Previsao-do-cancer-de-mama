@@ -1,29 +1,50 @@
 import matplotlib.pyplot as plt 
 from sklearn.model_selection import cross_val_score
-from sklearn.metrics import accuracy_score
 
+# Importações necessárias
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.svm import SVC
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, classification_report, confusion_matrix
 
+def classification_model(model, traindf, testdf, predictors, target):
+    """
+    Treina o modelo, faz previsões e calcula as métricas de avaliação.
 
-def classification_model(model, data, predictors, outcome):
-    # Treina o modelo
-    model.fit(data[predictors], data[outcome])
+    Parameters:
+    - model: modelo de classificação a ser treinado.
+    - traindf: DataFrame de treinamento.
+    - testdf: DataFrame de teste.
+    - predictors: lista de nomes das colunas usadas como preditores.
+    - target: nome da coluna alvo.
+
+    Returns:
+    - None: imprime as métricas no console.
+    """
+    # Treinamento do modelo
+    model.fit(traindf[predictors], traindf[target])
     
-    # Faz previsões no conjunto de treinamento
-    predictions = model.predict(data[predictors])
+    # Previsões no conjunto de teste
+    predictions = model.predict(testdf[predictors])
     
-    # Imprime a acurácia no conjunto de treinamento
-    accuracy = accuracy_score(data[outcome], predictions)
-    print("Acurácia no conjunto de treinamento: %s" % "{0:.3%}".format(accuracy))
+    # Cálculo das métricas
+    accuracy = accuracy_score(testdf[target], predictions)
+    precision = precision_score(testdf[target], predictions)  
+    recall = recall_score(testdf[target], predictions)        
+    f1 = f1_score(testdf[target], predictions)              
 
-    # Realiza a validação cruzada k-fold com 5 dobras
-    cross_val_scores = cross_val_score(model, data[predictors], data[outcome], cv=5)
-
-    # Imprime as pontuações de validação cruzada
-    print("Pontuações de Validação Cruzada: ", cross_val_scores)
-    print("Média das Pontuações de Validação Cruzada: %s" % "{0:.3%}".format(cross_val_scores.mean()))
-
-    # Ajusta o modelo novamente para que possa ser referenciado fora da função
-    model.fit(data[predictors], data[outcome])
+    # Exibição das métricas
+    print(f"Modelo: {model.__class__.__name__}")
+    print(f"Acurácia: {accuracy:.4f}")
+    print(f"Precisão: {precision:.4f}")
+    print(f"Recall: {recall:.4f}")
+    print(f"F1 Score: {f1:.4f}")
+    print("\nRelatório de Classificação:\n", classification_report(testdf[target], predictions))
+    print("Matriz de Confusão:\n", confusion_matrix(testdf[target], predictions))
+    print("=" * 50)
 
 
 
