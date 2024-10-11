@@ -27,7 +27,7 @@ from sklearn.preprocessing import StandardScaler
 from imblearn.over_sampling import SMOTE
 from sklearn.model_selection import cross_val_score
 
-from function import plot_attribute_graphs,statify_preview,plot_graphic_pie,evaluate_models,print_model_evaluation
+from function import plot_attribute_graphs,statify_preview,plot_graphic_pie,evaluate_models,print_model_evaluation,plot_confusion_matrix
 
 
 ##================## Lendo o database ##================##
@@ -144,3 +144,8 @@ svm_f1 = f1_score(y_test,svm_pred)
 
 # Chame a função com os dados necessários
 print_model_evaluation(rf_f1, knn_f1, svm_f1, rf_cm, knn_cm, svm_cm, y_test, rf_pred, knn_pred, svm_pred)
+
+#plotar matriz de confusão mais interativamente
+# plot_confusion_matrix(rf_cm)
+# plot_confusion_matrix(knn_cm)
+# plot_confusion_matrix(svm_cm)

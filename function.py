@@ -43,13 +43,12 @@ def evaluate_models(models, X_train, y_train, scoring_metrics):
         print("==" * 30)
 
 
-def plot_confusion_matrix(testdf, predictions, target):
+def plot_confusion_matrix(cm):
     """
     Plota a matriz de confusão para as previsões feitas.
     """
     # Matriz de Confusão com Rótulos
     labels = ['Benigno (0)', 'Maligno (1)']
-    cm = confusion_matrix(testdf[target], predictions)
     cm_display = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=labels)
     
     cm_display.plot(cmap=plt.cm.Blues)  # Usando o cmap para uma boa visualização
