@@ -82,14 +82,17 @@ X_train_resh, y_train_resh = oversample.fit_resample(X_train, y_train)
 
 ##================## Modelo de Classificação ##================##
 
-# Lista de modelos a serem testados
-models = {
-    "Regressão Logística": LogisticRegression(max_iter=1000),
-    "Árvore de Decisão": DecisionTreeClassifier(),
-    "Random Forest": RandomForestClassifier(n_estimators=100),
-    "SVM": SVC(),
-    "Gradient Boosting": GradientBoostingClassifier(),
-    "KNN": KNeighborsClassifier(),
-    "Naive Bayes": GaussianNB()
-}
+# Criando pipelines para cada modelo
+#Random Forest	
+rf_pipeline = Pipeline(steps = [('scale',StandardScaler()),('classifier',RandomForestClassifier(random_state=42))])
+#Regressão Logística	
+logreg_pipeline = Pipeline(steps = [('scale',StandardScaler()),('classifier',LogisticRegression(random_state=42))])
+#Naive Bayes Gaussiano	
+gaussianNB_pipeline = Pipeline(steps = [('scale',StandardScaler()),('classifier',GaussianNB())])
+#K-Nearest Neighbors (KNN)	
+knn_pipeline = Pipeline(steps = [('scale',StandardScaler()),('classifier',KNeighborsClassifier(n_neighbors=5))])
+#Árvore de Decisão	
+decision_tree_pipeline = Pipeline(steps=[('scale', StandardScaler()),('classifier', DecisionTreeClassifier(random_state=42))])
+#Máquina de Vetores de Suporte (SVM)	
+svm_pipeline = Pipeline(steps=[('scale', StandardScaler()),('classifier', SVC(probability=True, random_state=42))])
 
