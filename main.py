@@ -18,6 +18,8 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.svm import SVC
 
+from imblearn.over_sampling import SMOTE
+
 from function import plot_attribute_graphs,statify_preview,classification_model,classification_model_with_cv,plot_graphic_pie
 
 
@@ -38,9 +40,6 @@ df['diagnosis'] = df['diagnosis'].map({'M':1,'B':0})
 #fornece informações sobre a distribuição e principais medidas de tendência central e dispersão
 #print(df.describe())
 
-#Imprime a quantidade de tumores malignos e benignos
-# print("Quantidade de Maligno: ", np.bincount(df['diagnosis'])[0])
-# print("Quantidade de Benigno: ", np.bincount(df['diagnosis'])[1])
 
 #Pegando os primeiros 10 atributos do database e adicionando em uma lista
 features_mean=list(df.columns[1:11])
@@ -58,9 +57,17 @@ dfB=df[df['diagnosis'] ==0]
 ##================## Treinando e Testando ##================##
 
 traindf, testdf = train_test_split(df, test_size=0.3, random_state=42, stratify=df['diagnosis'])
-#Plotando gráfico pizza para saber a porcentagem de maligno e benigno
-plot_graphic_pie(traindf)
 
+# Separando as features e o target do conjunto de treino
+X_train = traindf.drop(columns=['diagnosis'])
+y_train = traindf['diagnosis']
+
+#Os dados parecem um pouco desbalanceados então tentarei balancear eles com smote
+oversample = SMOTE()
+X_train_resh, y_train_resh = oversample.fit_resample(X_train, y_train)
+
+#Plotando gráfico pizza para saber a porcentagem de maligno e benigno
+#plot_graphic_pie(y_train,y_train_resh)
 #statify_preview(df,traindf,testdf)
 
 ##================## Modelo de Classificação ##================##

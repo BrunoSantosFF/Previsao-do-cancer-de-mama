@@ -133,12 +133,25 @@ def statify_preview(df,traindf,testdf):
   print("\nProporção no Conjunto de Teste:")
   print(testdf['diagnosis'].value_counts(normalize=True))
 
-def plot_graphic_pie(traindf):
-  # Contar os valores de maligno (1) e benigno (0)
-  diagnosis_counts = traindf['diagnosis'].value_counts()
-  # Criar o gráfico de pizza
-  plt.figure(figsize=(8, 6))
-  plt.pie(diagnosis_counts, labels=['Benigno (0)', 'Maligno (1)'], autopct='%1.1f%%', startangle=90)
-  plt.title('Distribuição de Diagnósticos (Benigno vs Maligno)')
-  plt.axis('equal')  # Para garantir que o gráfico de pizza seja um círculo
-  plt.show()
+def plot_graphic_pie(y_train, y_train_resh):
+  # Contando a quantidade de cada classe
+    labels = ['Benigno (0)', 'Maligno (1)']
+    original_counts = [sum(y_train == 0), sum(y_train == 1)]
+    reshaped_counts = [sum(y_train_resh == 0), sum(y_train_resh == 1)]
+
+    # Criando o gráfico de pizza para o conjunto original
+    plt.figure(figsize=(12, 6))
+
+    plt.subplot(1, 2, 1)  # 1 linha, 2 colunas, 1ª posição
+    plt.pie(original_counts, labels=labels, autopct='%1.1f%%', startangle=90)
+    plt.title('Distribuição Original das Classes')
+    plt.axis('equal')  # Para garantir que o gráfico de pizza seja circular
+
+    # Criando o gráfico de pizza para o conjunto balanceado
+    plt.subplot(1, 2, 2)  # 1 linha, 2 colunas, 2ª posição
+    plt.pie(reshaped_counts, labels=labels, autopct='%1.1f%%', startangle=90)
+    plt.title('Distribuição das Classes Após SMOTE')
+    plt.axis('equal')  # Para garantir que o gráfico de pizza seja circular
+
+    plt.tight_layout()  # Ajusta o layout para evitar sobreposição
+    plt.show()
