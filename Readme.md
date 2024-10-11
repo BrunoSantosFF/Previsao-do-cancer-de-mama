@@ -1,4 +1,4 @@
-# Previsão do câncer de mama
+# Previsão do câncer de mama (Tumores malignos)
 
 Um modelo de machine learning (ML) destinado a prever câncer de mama maligno ou benigno pode ser desenvolvido a partir de dados disponibilizados em um arquivo CSV, que frequentemente contém informações relevantes sobre pacientes e características tumorais
 

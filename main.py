@@ -108,10 +108,15 @@ models = {
     'Support Vector Machine': svm_pipeline
 }
 
+
 for name_model, model in models.items():
-    print(f"{name_model}")
+    print(f"\033[1;31m{name_model}\033[m")
     for metric in scoring_metrics:
         val = cross_val_score(model,X_train_resh,y_train_resh,cv=5,scoring=metric)
         print(f'{metric}: {100*val.mean():.2f}')
 
     print("=="*30)
+
+##Foi feito o teste para dados balanceados(SMOTE) e dados desbalanceados(dados originais)
+## Os dados balanceados apresentaram melhores resultados
+##Todos os modelos foram bons, porém quero dar foco nos que tiveram o melhor recall (que é o objetivo) pois o objetivo é acertar o maximo te tumores malignos

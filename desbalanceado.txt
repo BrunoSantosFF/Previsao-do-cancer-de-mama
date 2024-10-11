@@ -1,0 +1,36 @@
+Random Forest
+accuracy: 92.71
+precision: 91.17
+recall: 89.20
+f1: 90.12
+============================================================
+Logistic Regression
+accuracy: 91.19
+precision: 90.68
+recall: 85.10
+f1: 87.78
+============================================================
+Gaussian Naive Bayes
+accuracy: 91.19
+precision: 89.94
+recall: 86.46
+f1: 88.03
+============================================================
+K-Nearest Neighbors
+accuracy: 91.45
+precision: 89.67
+recall: 87.15
+f1: 88.36
+============================================================
+Decision Tree
+accuracy: 90.71
+precision: 86.91
+recall: 88.51
+f1: 87.67
+============================================================
+Support Vector Machine
+accuracy: 90.69
+precision: 91.32
+recall: 83.06
+f1: 86.92
+============================================================
