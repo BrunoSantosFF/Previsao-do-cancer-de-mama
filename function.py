@@ -132,3 +132,13 @@ def statify_preview(df,traindf,testdf):
 
   print("\nProporção no Conjunto de Teste:")
   print(testdf['diagnosis'].value_counts(normalize=True))
+
+def plot_graphic_pie(traindf):
+  # Contar os valores de maligno (1) e benigno (0)
+  diagnosis_counts = traindf['diagnosis'].value_counts()
+  # Criar o gráfico de pizza
+  plt.figure(figsize=(8, 6))
+  plt.pie(diagnosis_counts, labels=['Benigno (0)', 'Maligno (1)'], autopct='%1.1f%%', startangle=90)
+  plt.title('Distribuição de Diagnósticos (Benigno vs Maligno)')
+  plt.axis('equal')  # Para garantir que o gráfico de pizza seja um círculo
+  plt.show()

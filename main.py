@@ -18,7 +18,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.svm import SVC
 
-from function import plot_attribute_graphs,statify_preview,classification_model,classification_model_with_cv
+from function import plot_attribute_graphs,statify_preview,classification_model,classification_model_with_cv,plot_graphic_pie
 
 
 ##================## Lendo o database ##================##
@@ -48,6 +48,9 @@ features_mean=list(df.columns[1:11])
 #Passando para um novo dataframe, porém separando os tumores malignos dos benignos
 dfM=df[df['diagnosis'] ==1]
 dfB=df[df['diagnosis'] ==0]
+#Quantidade de malignos e benignos
+#print("Malignos: ",len(dfM))
+#print("Benignos: ",len(dfB))
 
 #plotando graficos para ter noção dos melhores atributos
 #plot_attribute_graphs(features_mean,dfM,dfB)
@@ -55,6 +58,8 @@ dfB=df[df['diagnosis'] ==0]
 ##================## Treinando e Testando ##================##
 
 traindf, testdf = train_test_split(df, test_size=0.3, random_state=42, stratify=df['diagnosis'])
+#Plotando gráfico pizza para saber a porcentagem de maligno e benigno
+plot_graphic_pie(traindf)
 
 #statify_preview(df,traindf,testdf)
 
@@ -62,15 +67,17 @@ traindf, testdf = train_test_split(df, test_size=0.3, random_state=42, stratify=
 #lista com atributos que foram escolhidos para terem relação com previsão
 predictor = ['radius_mean','perimeter_mean','area_mean','compactness_mean','concave points_mean']
 
-# Lista de modelos a serem testados
-models = [
-    LogisticRegression(max_iter=1000, random_state=42),
-    RandomForestClassifier(random_state=42),
-    DecisionTreeClassifier(random_state=42),
-    SVC(probability=True, random_state=42)  
-]
 
-#treinamento e teste
-for model in models :
-    classification_model(model, traindf, testdf, predictor, "diagnosis")
-    #classification_model_with_cv(model, traindf, testdf, predictor, "diagnosis")
+
+# # Lista de modelos a serem testados
+# models = [
+#     LogisticRegression(max_iter=1000, random_state=42),
+#     RandomForestClassifier(random_state=42),
+#     DecisionTreeClassifier(random_state=42),
+#     SVC(probability=True, random_state=42)  
+# ]
+
+# #treinamento e teste
+# for model in models :
+#     classification_model(model, traindf, testdf, predictor, "diagnosis")
+#     #classification_model_with_cv(model, traindf, testdf, predictor, "diagnosis")
