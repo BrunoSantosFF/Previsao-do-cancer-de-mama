@@ -24,8 +24,9 @@ from sklearn.preprocessing import StandardScaler
 
 
 from imblearn.over_sampling import SMOTE
+from sklearn.model_selection import cross_val_score
 
-from function import plot_attribute_graphs,statify_preview,classification_model,classification_model_with_cv,plot_graphic_pie
+from function import plot_attribute_graphs,statify_preview,plot_graphic_pie
 
 
 ##================## Lendo o database ##================##
@@ -98,14 +99,19 @@ svm_pipeline = Pipeline(steps=[('scale', StandardScaler()),('classifier', SVC(pr
 
 scoring_metrics = ['accuracy', 'precision', 'recall', 'f1']
 
-models = [rf_pipeline, logreg_pipeline, gaussianNB_pipeline, knn_pipeline, decision_tree_pipeline, svm_pipeline]
+models = {
+    'Random Forest': rf_pipeline,
+    'Logistic Regression': logreg_pipeline,
+    'Gaussian Naive Bayes': gaussianNB_pipeline,
+    'K-Nearest Neighbors': knn_pipeline,
+    'Decision Tree': decision_tree_pipeline,
+    'Support Vector Machine': svm_pipeline
+}
 
-for metric in scoring_metrics:
-    val = cross_val_score(rf_pipeline,X_train_resh,y_train_resh,cv=5,scoring=metric)
+for name_model, model in models.items():
+    print(f"{name_model}")
+    for metric in scoring_metrics:
+        val = cross_val_score(model,X_train_resh,y_train_resh,cv=5,scoring=metric)
+        print(f'{metric}: {100*val.mean():.2f}')
 
-print(f'Média das {metric} obtidas na validação cruzada:')
-print('Random Forest mean:',rf_cv_acc.mean())
-print('Logistic Regression mean:',logreg_cv_acc.mean())
-print('Gaussian NB mean:',gaussian_cv_acc.mean())
-print('KNN mean:',knn_cv_acc.mean())
-print('XGBoost mean:',xgb_cv_acc.mean())
+    print("=="*30)
