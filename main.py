@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec 
 import mpld3 as mpl
 
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.model_selection import KFold, StratifiedKFold 
 from sklearn.tree import DecisionTreeClassifier, export_graphviz
 from sklearn import metrics
@@ -143,9 +143,52 @@ knn_f1 = f1_score(y_test,knn_pred)
 svm_f1 = f1_score(y_test,svm_pred)
 
 # Chame a função com os dados necessários
-print_model_evaluation(rf_f1, knn_f1, svm_f1, rf_cm, knn_cm, svm_cm, y_test, rf_pred, knn_pred, svm_pred)
+#print_model_evaluation(rf_f1, knn_f1, svm_f1, rf_cm, knn_cm, svm_cm, y_test, rf_pred, knn_pred, svm_pred)
 
 #plotar matriz de confusão mais interativamente
 # plot_confusion_matrix(rf_cm)
 # plot_confusion_matrix(knn_cm)
 # plot_confusion_matrix(svm_cm)
+
+##================## Ajuste de hiperparametros ##================##
+## Ajustando parametro para ver se conseguimos melhorar o modelo
+param_grid_rf = {
+    'classifier__n_estimators': [50, 100, 200],
+    'classifier__max_depth': [None, 10, 20, 30],
+    'classifier__min_samples_split': [2, 5, 10]
+}
+
+# Hiperparâmetros para K-Nearest Neighbors
+param_grid_knn = {
+    'classifier__n_neighbors': [3, 5, 7, 9],
+    'classifier__weights': ['uniform', 'distance'],
+    'classifier__metric': ['euclidean', 'manhattan']
+}
+
+# Hiperparâmetros para Support Vector Machine
+param_grid_svm = {
+    'classifier__C': [0.1, 1, 10],
+    'classifier__gamma': ['scale', 'auto'],
+    'classifier__kernel': ['linear', 'rbf']
+}
+
+# Ajustando os modelos usando GridSearchCV
+
+# Random Forest
+grid_rf = GridSearchCV(estimator=rf_pipeline, param_grid=param_grid_rf, cv=5, scoring='f1')
+grid_rf.fit(X_train_resh, y_train_resh)
+print(f'Best parameters for Random Forest: {grid_rf.best_params_}')
+print(f'Best F1 score: {grid_rf.best_score_}')
+
+# K-Nearest Neighbors
+grid_knn = GridSearchCV(estimator=knn_pipeline, param_grid=param_grid_knn, cv=5, scoring='f1')
+grid_knn.fit(X_train_resh, y_train_resh)
+print(f'Best parameters for KNN: {grid_knn.best_params_}')
+print(f'Best F1 score: {grid_knn.best_score_}')
+
+# Support Vector Machine
+grid_svm = GridSearchCV(estimator=svm_pipeline, param_grid=param_grid_svm, cv=5, scoring='f1')
+grid_svm.fit(X_train_resh, y_train_resh)
+print(f'Best parameters for SVM: {grid_svm.best_params_}')
+print(f'Best F1 score: {grid_svm.best_score_}')
+
