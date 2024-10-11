@@ -8,7 +8,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.svm import SVC
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, classification_report, confusion_matrix
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, classification_report, confusion_matrix,ConfusionMatrixDisplay
 
 def classification_model(model, traindf, testdf, predictors, target):
     """
@@ -29,7 +29,6 @@ def classification_model(model, traindf, testdf, predictors, target):
     
     # Previsões no conjunto de teste
     predictions = model.predict(testdf[predictors])
-    
     # Cálculo das métricas
     accuracy = accuracy_score(testdf[target], predictions)
     precision = precision_score(testdf[target], predictions)  
@@ -44,9 +43,23 @@ def classification_model(model, traindf, testdf, predictors, target):
     print(f"F1 Score: {f1:.4f}")
     print("\nRelatório de Classificação:\n", classification_report(testdf[target], predictions))
     print("Matriz de Confusão:\n", confusion_matrix(testdf[target], predictions))
+    plot_confusion_matrix(testdf,predictions,target)
     print("=" * 50)
+    
+    
 
-
+def plot_confusion_matrix(testdf, predictions, target):
+    """
+    Plota a matriz de confusão para as previsões feitas.
+    """
+    # Matriz de Confusão com Rótulos
+    labels = ['Benigno (0)', 'Maligno (1)']
+    cm = confusion_matrix(testdf[target], predictions)
+    cm_display = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=labels)
+    
+    cm_display.plot(cmap=plt.cm.Blues)  # Usando o cmap para uma boa visualização
+    plt.title('Matriz de Confusão')
+    plt.show()  # Mostrar a matriz de confusão plotada
 
 def plot_attribute_graphs(features_mean, dfM, dfB):
   # Definir o tamanho do gráfico

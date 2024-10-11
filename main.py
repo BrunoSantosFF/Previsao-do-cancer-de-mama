@@ -63,11 +63,13 @@ traindf, testdf = train_test_split(df, test_size=0.3, random_state=42, stratify=
 predictor = ['radius_mean','perimeter_mean','area_mean','compactness_mean','concave points_mean']
 
 # Lista de modelos a serem testados
-model = [
+models = [
     LogisticRegression(max_iter=1000, random_state=42),
     RandomForestClassifier(random_state=42),
     DecisionTreeClassifier(random_state=42),
-    SVC(probability=True, random_state=42)  # probability=True para obter predict_proba
+    SVC(probability=True, random_state=42)  
 ]
 
-classification_model(model[0], traindf, testdf, predictor, "diagnosis")
+#treinamento e teste
+for model in models :
+    classification_model(model, traindf, testdf, predictor, "diagnosis")
