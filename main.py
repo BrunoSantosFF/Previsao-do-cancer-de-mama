@@ -7,13 +7,19 @@ import matplotlib.gridspec as gridspec
 import mpld3 as mpl
 
 from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import KFold, StratifiedKFold 
-from sklearn.ensemble import RandomForestClassifier
 from sklearn.tree import DecisionTreeClassifier, export_graphviz
 from sklearn import metrics
 
+#models
+from sklearn.metrics import accuracy_score
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.svm import SVC
+
 from function import plot_attribute_graphs,statify_preview,classification_model
+
 
 ##================## Lendo o database ##================##
 df = pd.read_csv("database/data.csv",header = 0)
@@ -55,7 +61,14 @@ traindf, testdf = train_test_split(df, test_size=0.3, random_state=42, stratify=
 ##================## Modelo de Classificação ##================##
 #lista com atributos que foram escolhidos para terem relação com previsão
 predictor = ['radius_mean','perimeter_mean','area_mean','compactness_mean','concave points_mean']
-#modelo escolhido
-model=LogisticRegression()
-#função para a classificação
-#classification_model(model,traindf,predictor,"diagnosis")
+
+# Lista de modelos a serem testados
+models = [
+    LogisticRegression(),
+    RandomForestClassifier(),
+    DecisionTreeClassifier(),
+    SVC()
+]
+# Itera sobre cada modelo na lista e aplica a função de classificação
+
+classification_model(models[0], traindf, predictor, "diagnosis")
