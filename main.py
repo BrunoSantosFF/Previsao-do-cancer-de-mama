@@ -27,7 +27,7 @@ from sklearn.preprocessing import StandardScaler
 from imblearn.over_sampling import SMOTE
 from sklearn.model_selection import cross_val_score
 
-from function import plot_attribute_graphs,statify_preview,plot_graphic_pie,evaluate_models,print_model_evaluation,plot_confusion_matrix
+from function import plot_attribute_graphs,statify_preview,plot_graphic_pie,evaluate_models,print_model_evaluation,plot_confusion_matrix,hyperparameter_tuning_and_evaluation
 
 
 ##================## Lendo o database ##================##
@@ -174,21 +174,25 @@ param_grid_svm = {
 
 # Ajustando os modelos usando GridSearchCV
 
-# Random Forest
-grid_rf = GridSearchCV(estimator=rf_pipeline, param_grid=param_grid_rf, cv=5, scoring='f1')
-grid_rf.fit(X_train_resh, y_train_resh)
-print(f'Best parameters for Random Forest: {grid_rf.best_params_}')
-print(f'Best F1 score: {grid_rf.best_score_}')
+# Chame a função para cada modelo
+rf_pred = hyperparameter_tuning_and_evaluation(rf_pipeline, param_grid_rf, X_train_resh, y_train_resh, X_test, y_test, 'Random Forest')
+knn_pred = hyperparameter_tuning_and_evaluation(knn_pipeline, param_grid_knn, X_train_resh, y_train_resh, X_test, y_test, 'K-Nearest Neighbors')
+svm_pred = hyperparameter_tuning_and_evaluation(svm_pipeline, param_grid_svm, X_train_resh, y_train_resh, X_test, y_test, 'Support Vector Machine')
 
-# K-Nearest Neighbors
-grid_knn = GridSearchCV(estimator=knn_pipeline, param_grid=param_grid_knn, cv=5, scoring='f1')
-grid_knn.fit(X_train_resh, y_train_resh)
-print(f'Best parameters for KNN: {grid_knn.best_params_}')
-print(f'Best F1 score: {grid_knn.best_score_}')
 
-# Support Vector Machine
-grid_svm = GridSearchCV(estimator=svm_pipeline, param_grid=param_grid_svm, cv=5, scoring='f1')
-grid_svm.fit(X_train_resh, y_train_resh)
-print(f'Best parameters for SVM: {grid_svm.best_params_}')
-print(f'Best F1 score: {grid_svm.best_score_}')
+# Fazer predições com os melhores modelos
+rf_pred = grid_rf.predict(X_test)
+knn_pred = grid_knn.predict(X_test)
+svm_pred = grid_svm.predict(X_test)
 
+# Repetir o cálculo de F1 score e matriz de confusão
+rf_f1 = f1_score(y_test, rf_pred)
+knn_f1 = f1_score(y_test, knn_pred)
+svm_f1 = f1_score(y_test, svm_pred)
+
+# Chame a função com os dados necessários
+print_model_evaluation(rf_f1, knn_f1, svm_f1, 
+                       confusion_matrix(y_test, rf_pred), 
+                       confusion_matrix(y_test, knn_pred), 
+                       confusion_matrix(y_test, svm_pred), 
+                       y_test, rf_pred, knn_pred, svm_pred)
