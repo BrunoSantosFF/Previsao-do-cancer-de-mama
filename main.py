@@ -13,10 +13,15 @@ from sklearn import metrics
 
 #models
 from sklearn.metrics import accuracy_score
+from sklearn.pipeline import Pipeline
 from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import RandomForestClassifier
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.svm import SVC
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.naive_bayes import GaussianNB
+from sklearn.preprocessing import StandardScaler
+
 
 from imblearn.over_sampling import SMOTE
 
@@ -56,13 +61,18 @@ dfB=df[df['diagnosis'] ==0]
 
 ##================## Treinando e Testando ##================##
 
+# Definindo as features a serem utilizadas (através dos graficos)
+predictor = ['radius_mean', 'perimeter_mean', 'area_mean', 'compactness_mean', 'concave points_mean']
+
 traindf, testdf = train_test_split(df, test_size=0.3, random_state=42, stratify=df['diagnosis'])
 
 # Separando as features e o target do conjunto de treino
-X_train = traindf.drop(columns=['diagnosis'])
+X_train = traindf[predictor]
 y_train = traindf['diagnosis']
+X_test = testdf[predictor]
+y_test = testdf['diagnosis']
 
-#Os dados parecem um pouco desbalanceados então tentarei balancear eles com smote
+# Balanceando os dados com SMOTE
 oversample = SMOTE()
 X_train_resh, y_train_resh = oversample.fit_resample(X_train, y_train)
 
@@ -71,20 +81,15 @@ X_train_resh, y_train_resh = oversample.fit_resample(X_train, y_train)
 #statify_preview(df,traindf,testdf)
 
 ##================## Modelo de Classificação ##================##
-#lista com atributos que foram escolhidos para terem relação com previsão
-predictor = ['radius_mean','perimeter_mean','area_mean','compactness_mean','concave points_mean']
 
+# Lista de modelos a serem testados
+models = {
+    "Regressão Logística": LogisticRegression(max_iter=1000),
+    "Árvore de Decisão": DecisionTreeClassifier(),
+    "Random Forest": RandomForestClassifier(n_estimators=100),
+    "SVM": SVC(),
+    "Gradient Boosting": GradientBoostingClassifier(),
+    "KNN": KNeighborsClassifier(),
+    "Naive Bayes": GaussianNB()
+}
 
-
-# # Lista de modelos a serem testados
-# models = [
-#     LogisticRegression(max_iter=1000, random_state=42),
-#     RandomForestClassifier(random_state=42),
-#     DecisionTreeClassifier(random_state=42),
-#     SVC(probability=True, random_state=42)  
-# ]
-
-# #treinamento e teste
-# for model in models :
-#     classification_model(model, traindf, testdf, predictor, "diagnosis")
-#     #classification_model_with_cv(model, traindf, testdf, predictor, "diagnosis")
