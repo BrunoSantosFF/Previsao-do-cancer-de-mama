@@ -96,3 +96,16 @@ decision_tree_pipeline = Pipeline(steps=[('scale', StandardScaler()),('classifie
 #Máquina de Vetores de Suporte (SVM)	
 svm_pipeline = Pipeline(steps=[('scale', StandardScaler()),('classifier', SVC(probability=True, random_state=42))])
 
+scoring_metrics = ['accuracy', 'precision', 'recall', 'f1']
+
+models = [rf_pipeline, logreg_pipeline, gaussianNB_pipeline, knn_pipeline, decision_tree_pipeline, svm_pipeline]
+
+for metric in scoring_metrics:
+    val = cross_val_score(rf_pipeline,X_train_resh,y_train_resh,cv=5,scoring=metric)
+
+print(f'Média das {metric} obtidas na validação cruzada:')
+print('Random Forest mean:',rf_cv_acc.mean())
+print('Logistic Regression mean:',logreg_cv_acc.mean())
+print('Gaussian NB mean:',gaussian_cv_acc.mean())
+print('KNN mean:',knn_cv_acc.mean())
+print('XGBoost mean:',xgb_cv_acc.mean())
