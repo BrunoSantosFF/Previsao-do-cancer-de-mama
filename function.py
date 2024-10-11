@@ -11,6 +11,15 @@ from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, classification_report, confusion_matrix,ConfusionMatrixDisplay
 
 
+def evaluate_models(models, X_train, y_train, scoring_metrics):
+    for name_model, model in models.items():
+        print(f"Modelo: {name_model}")
+        for metric in scoring_metrics:
+            val = cross_val_score(model, X_train, y_train, cv=5, scoring=metric)
+            print(f'{metric}: {100 * val.mean():.2f}')
+        print("==" * 30)
+
+
 def plot_confusion_matrix(testdf, predictions, target):
     """
     Plota a matriz de confusão para as previsões feitas.

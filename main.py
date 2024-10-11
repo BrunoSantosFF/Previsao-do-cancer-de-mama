@@ -12,7 +12,8 @@ from sklearn.tree import DecisionTreeClassifier, export_graphviz
 from sklearn import metrics
 
 #models
-from sklearn.metrics import accuracy_score
+
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, classification_report, confusion_matrix,ConfusionMatrixDisplay
 from sklearn.pipeline import Pipeline
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
@@ -26,7 +27,7 @@ from sklearn.preprocessing import StandardScaler
 from imblearn.over_sampling import SMOTE
 from sklearn.model_selection import cross_val_score
 
-from function import plot_attribute_graphs,statify_preview,plot_graphic_pie
+from function import plot_attribute_graphs,statify_preview,plot_graphic_pie,evaluate_models
 
 
 ##================## Lendo o database ##================##
@@ -60,7 +61,7 @@ dfB=df[df['diagnosis'] ==0]
 #plotando graficos para ter noção dos melhores atributos
 #plot_attribute_graphs(features_mean,dfM,dfB)
 
-##================## Treinando e Testando ##================##
+##================## Sepando os dados e features ##================##
 
 # Definindo as features a serem utilizadas (através dos graficos)
 predictor = ['radius_mean', 'perimeter_mean', 'area_mean', 'compactness_mean', 'concave points_mean']
@@ -97,8 +98,10 @@ decision_tree_pipeline = Pipeline(steps=[('scale', StandardScaler()),('classifie
 #Máquina de Vetores de Suporte (SVM)	
 svm_pipeline = Pipeline(steps=[('scale', StandardScaler()),('classifier', SVC(probability=True, random_state=42))])
 
+#Array com as metricas
 scoring_metrics = ['accuracy', 'precision', 'recall', 'f1']
 
+#dicionario de modelos
 models = {
     'Random Forest': rf_pipeline,
     'Logistic Regression': logreg_pipeline,
@@ -108,15 +111,52 @@ models = {
     'Support Vector Machine': svm_pipeline
 }
 
+##================## Conjunto Treinamento ##================##
 
-for name_model, model in models.items():
-    print(f"\033[1;31m{name_model}\033[m")
-    for metric in scoring_metrics:
-        val = cross_val_score(model,X_train_resh,y_train_resh,cv=5,scoring=metric)
-        print(f'{metric}: {100*val.mean():.2f}')
+#Função para fazer a validação cruzada
+#evaluate_models(models, X_train_resh, y_train_resh, scoring_metrics)
 
-    print("=="*30)
+##================## Conjunto Teste ##================##
 
 ##Foi feito o teste para dados balanceados(SMOTE) e dados desbalanceados(dados originais)
 ## Os dados balanceados apresentaram melhores resultados
-##Todos os modelos foram bons, porém quero dar foco nos que tiveram o melhor recall (que é o objetivo) pois o objetivo é acertar o maximo te tumores malignos
+##Todos os modelos foram bons, porém quero dar foco nos que tiveram o melhor recall (que é o objetivo) pois o objetivo é acertar o maximo te tumores malignos, são eles :Random Forest, K-Nearest Neighbors, Support Vector Machine
+
+#Agora iremos usar o conjunto Teste para relacionar
+rf_pipeline.fit(X_train_resh,y_train_resh)
+knn_pipeline.fit(X_train_resh,y_train_resh)
+svm_pipeline.fit(X_train_resh,y_train_resh)
+
+#Fazendo a predição
+rf_pred  = rf_pipeline.predict(X_test)
+knn_pred = knn_pipeline.predict(X_test)
+svm_pred = svm_pipeline.predict(X_test)
+
+#Plotando a matriz de confusão
+rf_cm  = confusion_matrix(y_test,rf_pred)
+knn_cm = confusion_matrix(y_test,knn_pred)
+svm_cm = confusion_matrix(y_test,svm_pred)
+
+#Imprimindo F1_score
+rf_f1  = f1_score(y_test,rf_pred)
+knn_f1 = f1_score(y_test,knn_pred)
+svm_f1 = f1_score(y_test,svm_pred)
+
+print('Mean f1 scores:')
+
+print('RF mean :',rf_f1)
+print('KNN mean :',knn_f1)
+print('SVM mean :',svm_f1)
+
+print("======== Random Forest ========")
+print(rf_cm)
+print(classification_report(y_test,rf_pred))
+print('Accuracy Score: ',accuracy_score(y_test,rf_pred))
+print("======== KNN ========")
+print(knn_cm)
+print(classification_report(y_test,knn_pred))
+print('Accuracy Score: ',accuracy_score(y_test,knn_pred))
+print("======== SVM ========")
+print(svm_cm)
+print(classification_report(y_test,svm_pred))
+print('Accuracy Score: ',accuracy_score(y_test,svm_pred))
