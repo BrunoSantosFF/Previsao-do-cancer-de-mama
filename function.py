@@ -21,8 +21,6 @@ def classification_model(model, traindf, testdf, predictors, target):
     - predictors: lista de nomes das colunas usadas como preditores.
     - target: nome da coluna alvo.
 
-    Returns:
-    - None: imprime as métricas no console.
     """
     # Treinamento do modelo
     model.fit(traindf[predictors], traindf[target])
@@ -37,16 +35,58 @@ def classification_model(model, traindf, testdf, predictors, target):
 
     # Exibição das métricas
     print(f"Modelo: {model.__class__.__name__}")
-    print(f"Acurácia: {accuracy:.4f}")
-    print(f"Precisão: {precision:.4f}")
-    print(f"Recall: {recall:.4f}")
-    print(f"F1 Score: {f1:.4f}")
-    print("\nRelatório de Classificação:\n", classification_report(testdf[target], predictions))
+    print(f"Acurácia: {100*accuracy:.2f}%")
+    print(f"Precisão: {100*precision:.2f}%")
+    print(f"Recall: {100*recall:.2f}%")
+    print(f"F1 Score: {100*f1:.2f}%")
+    #print("\nRelatório de Classificação:\n", classification_report(testdf[target], predictions))
     print("Matriz de Confusão:\n", confusion_matrix(testdf[target], predictions))
-    plot_confusion_matrix(testdf,predictions,target)
     print("=" * 50)
     
+def classification_model_with_cv(model, traindf, testdf, predictors, target):
+    """
+    Avalia o modelo usando validação cruzada com o conjunto de treinamento e também calcula as métricas no conjunto de teste.
+
+    Parameters:
+    - model: modelo de classificação a ser avaliado.
+    - traindf: DataFrame de treinamento.
+    - testdf: DataFrame de teste.
+    - predictors: lista de nomes das colunas usadas como preditores.
+    - target: nome da coluna alvo.
+    """
+    # Ajustar o modelo no conjunto de treinamento
+    model.fit(traindf[predictors], traindf[target])
     
+    # Validação cruzada para o conjunto de treinamento
+    cv_accuracy = cross_val_score(model, traindf[predictors], traindf[target], cv=5, scoring='accuracy')
+    cv_precision = cross_val_score(model, traindf[predictors], traindf[target], cv=5, scoring='precision')
+    cv_recall = cross_val_score(model, traindf[predictors], traindf[target], cv=5, scoring='recall')
+    cv_f1 = cross_val_score(model, traindf[predictors], traindf[target], cv=5, scoring='f1')
+
+    # Previsões no conjunto de teste
+    predictions = model.predict(testdf[predictors])
+    
+    # Cálculo das métricas no conjunto de teste
+    accuracy_test = accuracy_score(testdf[target], predictions)
+    precision_test = precision_score(testdf[target], predictions)
+    recall_test = recall_score(testdf[target], predictions)
+    f1_test = f1_score(testdf[target], predictions)
+
+    # Exibição das métricas
+    print(f"Modelo: {model.__class__.__name__}")
+    print(f"Média da Acurácia na Validação Cruzada: {100 * cv_accuracy.mean():.2f}%")
+    print(f"Média da Precisão na Validação Cruzada: {100 * cv_precision.mean():.2f}%")
+    print(f"Média do Recall na Validação Cruzada: {100 * cv_recall.mean():.2f}%")
+    print(f"Média do F1 Score na Validação Cruzada: {100 * cv_f1.mean():.2f}%")
+    
+    print("\nMétricas no Conjunto de Teste:")
+    print(f"Acurácia: {100 * accuracy_test:.2f}%")
+    print(f"Precisão: {100 * precision_test:.2f}%")
+    print(f"Recall: {100 * recall_test:.2f}%")
+    print(f"F1 Score: {100 * f1_test:.2f}%")
+    
+    print("\nMatriz de Confusão no Conjunto de Teste:\n", confusion_matrix(testdf[target], predictions))
+    print("=" * 50)
 
 def plot_confusion_matrix(testdf, predictions, target):
     """

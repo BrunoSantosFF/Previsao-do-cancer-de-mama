@@ -18,7 +18,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.svm import SVC
 
-from function import plot_attribute_graphs,statify_preview,classification_model
+from function import plot_attribute_graphs,statify_preview,classification_model,classification_model_with_cv
 
 
 ##================## Lendo o database ##================##
@@ -73,3 +73,4 @@ models = [
 #treinamento e teste
 for model in models :
     classification_model(model, traindf, testdf, predictor, "diagnosis")
+    #classification_model_with_cv(model, traindf, testdf, predictor, "diagnosis")
