@@ -6,10 +6,11 @@ import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec 
 import mpld3 as mpl
 
-from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.model_selection import train_test_split
 from sklearn.model_selection import KFold, StratifiedKFold 
 from sklearn.tree import DecisionTreeClassifier, export_graphviz
 from sklearn import metrics
+import seaborn as sns
 
 #models
 
@@ -152,6 +153,7 @@ svm_f1 = f1_score(y_test,svm_pred)
 
 ##================## Ajuste de hiperparametros ##================##
 ## Ajustando parametro para ver se conseguimos melhorar o modelo
+# Hiperparâmetros para Random Forest
 param_grid_rf = {
     'classifier__n_estimators': [50, 100, 200],
     'classifier__max_depth': [None, 10, 20, 30],
@@ -173,17 +175,9 @@ param_grid_svm = {
 }
 
 # Ajustando os modelos usando GridSearchCV
-
-# Chame a função para cada modelo
-rf_pred = hyperparameter_tuning_and_evaluation(rf_pipeline, param_grid_rf, X_train_resh, y_train_resh, X_test, y_test, 'Random Forest')
-knn_pred = hyperparameter_tuning_and_evaluation(knn_pipeline, param_grid_knn, X_train_resh, y_train_resh, X_test, y_test, 'K-Nearest Neighbors')
-svm_pred = hyperparameter_tuning_and_evaluation(svm_pipeline, param_grid_svm, X_train_resh, y_train_resh, X_test, y_test, 'Support Vector Machine')
-
-
-# Fazer predições com os melhores modelos
-rf_pred = grid_rf.predict(X_test)
-knn_pred = grid_knn.predict(X_test)
-svm_pred = grid_svm.predict(X_test)
+rf_pred, grid_rf = hyperparameter_tuning_and_evaluation(rf_pipeline, param_grid_rf, X_train_resh, y_train_resh, X_test, y_test, 'Random Forest')
+knn_pred, grid_knn = hyperparameter_tuning_and_evaluation(knn_pipeline, param_grid_knn, X_train_resh, y_train_resh, X_test, y_test, 'K-Nearest Neighbors')
+svm_pred, grid_svm = hyperparameter_tuning_and_evaluation(svm_pipeline, param_grid_svm, X_train_resh, y_train_resh, X_test, y_test, 'Support Vector Machine')
 
 # Repetir o cálculo de F1 score e matriz de confusão
 rf_f1 = f1_score(y_test, rf_pred)
@@ -196,3 +190,5 @@ print_model_evaluation(rf_f1, knn_f1, svm_f1,
                        confusion_matrix(y_test, knn_pred), 
                        confusion_matrix(y_test, svm_pred), 
                        y_test, rf_pred, knn_pred, svm_pred)
+
+##================## Comparação de modelos ##================##

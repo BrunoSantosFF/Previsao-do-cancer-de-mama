@@ -1,7 +1,7 @@
+# Importações necessárias
 import matplotlib.pyplot as plt 
 from sklearn.model_selection import cross_val_score
 
-# Importações necessárias
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
@@ -9,7 +9,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, classification_report, confusion_matrix,ConfusionMatrixDisplay
-
+from sklearn.model_selection import GridSearchCV
 
 def hyperparameter_tuning_and_evaluation(pipeline, param_grid, X_train, y_train, X_test, y_test, model_name):
     """
@@ -22,18 +22,17 @@ def hyperparameter_tuning_and_evaluation(pipeline, param_grid, X_train, y_train,
     :param X_test: Conjunto de dados de teste.
     :param y_test: Rótulos do conjunto de dados de teste.
     :param model_name: Nome do modelo (para exibir nos resultados).
-    :return: Predições do modelo ajustado.
+    :return: Predições do modelo ajustado e o objeto GridSearch.
     """
     # Ajustando o modelo com GridSearchCV
     grid_search = GridSearchCV(estimator=pipeline, param_grid=param_grid, cv=5, scoring='f1')
     grid_search.fit(X_train, y_train)
     
-    print(f'Best parameters for {model_name}: {grid_search.best_params_}')
-    print(f'Best F1 score: {grid_search.best_score_}')
-
     # Fazendo predições
     predictions = grid_search.predict(X_test)
-    return predictions
+    
+    # Retorna as predições e o objeto grid_search
+    return predictions, grid_search
 
 def print_model_evaluation(rf_f1, knn_f1, svm_f1, rf_cm, knn_cm, svm_cm, 
                             y_test, rf_pred, knn_pred, svm_pred):
