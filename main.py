@@ -28,7 +28,7 @@ from sklearn.preprocessing import StandardScaler
 from imblearn.over_sampling import SMOTE
 from sklearn.model_selection import cross_val_score
 
-from function import plot_attribute_graphs,statify_preview,plot_graphic_pie,evaluate_models,print_model_evaluation,plot_confusion_matrix,hyperparameter_tuning_and_evaluation
+from function import plot_attribute_graphs,statify_preview,plot_graphic_pie,evaluate_models,print_model_evaluation,plot_confusion_matrix,hyperparameter_tuning_and_evaluation,calculate_metrics
 
 
 ##================## Lendo o database ##================##
@@ -185,10 +185,30 @@ knn_f1 = f1_score(y_test, knn_pred)
 svm_f1 = f1_score(y_test, svm_pred)
 
 # Chame a função com os dados necessários
-print_model_evaluation(rf_f1, knn_f1, svm_f1, 
-                       confusion_matrix(y_test, rf_pred), 
-                       confusion_matrix(y_test, knn_pred), 
-                       confusion_matrix(y_test, svm_pred), 
-                       y_test, rf_pred, knn_pred, svm_pred)
+print_model_evaluation(rf_f1, knn_f1, svm_f1, confusion_matrix(y_test, rf_pred), confusion_matrix(y_test, knn_pred), confusion_matrix(y_test, svm_pred), y_test, rf_pred, knn_pred, svm_pred)
 
 ##================## Comparação de modelos ##================##
+
+# Calculando métricas para cada modelo
+rf_metrics = calculate_metrics(y_test, rf_pred)
+knn_metrics = calculate_metrics(y_test, knn_pred)
+svm_metrics = calculate_metrics(y_test, svm_pred)
+
+# Criando um DataFrame com os resultados
+metrics_data = {
+    'Metric': ['F1', 'Accuracy', 'Recall', 'Precision'],
+    'Random Forest': [rf_metrics['F1'], rf_metrics['Accuracy'], rf_metrics['Recall'], rf_metrics['Precision']],
+    'KNN': [knn_metrics['F1'], knn_metrics['Accuracy'], knn_metrics['Recall'], knn_metrics['Precision']],
+    'SVM': [svm_metrics['F1'], svm_metrics['Accuracy'], svm_metrics['Recall'], svm_metrics['Precision']]
+}
+
+df_results = pd.DataFrame(metrics_data)
+
+# Plotando a tabela
+fig, ax = plt.subplots(figsize=(8, 4))  # Define o tamanho da figura
+ax.axis('tight')
+ax.axis('off')
+ax.table(cellText=df_results.values, colLabels=df_results.columns, cellLoc='center', loc='center')
+
+# Exibindo a tabela
+plt.show()

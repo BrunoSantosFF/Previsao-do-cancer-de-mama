@@ -132,3 +132,12 @@ def plot_graphic_pie(y_train, y_train_resh):
 
     plt.tight_layout()  # Ajusta o layout para evitar sobreposição
     plt.show()
+
+# Função para calcular métricas de desempenho (sem ROC AUC)
+def calculate_metrics(y_true, y_pred):
+    return {
+        'F1': f1_score(y_true, y_pred),
+        'Accuracy': accuracy_score(y_true, y_pred),
+        'Recall': recall_score(y_true, y_pred),
+        'Precision': precision_score(y_true, y_pred)
+    }
