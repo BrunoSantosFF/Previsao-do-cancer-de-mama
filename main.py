@@ -62,7 +62,7 @@ dfB=df[df['diagnosis'] ==0]
 #plotando graficos para ter noção dos melhores atributos
 #plot_attribute_graphs(features_mean,dfM,dfB)
 
-##================## Sepando os dados e features ##================##
+##================## Separando os dados e features ##================##
 
 # Definindo as features a serem utilizadas (através dos graficos)
 predictor = ['radius_mean', 'perimeter_mean', 'area_mean', 'compactness_mean', 'concave points_mean']
@@ -147,7 +147,7 @@ svm_f1 = f1_score(y_test,svm_pred)
 #print_model_evaluation(rf_f1, knn_f1, svm_f1, rf_cm, knn_cm, svm_cm, y_test, rf_pred, knn_pred, svm_pred)
 
 #plotar matriz de confusão mais interativamente
-# plot_confusion_matrix(rf_cm)
+#plot_confusion_matrix(rf_cm)
 # plot_confusion_matrix(knn_cm)
 # plot_confusion_matrix(svm_cm)
 
@@ -185,7 +185,7 @@ knn_f1 = f1_score(y_test, knn_pred)
 svm_f1 = f1_score(y_test, svm_pred)
 
 # Chame a função com os dados necessários
-print_model_evaluation(rf_f1, knn_f1, svm_f1, confusion_matrix(y_test, rf_pred), confusion_matrix(y_test, knn_pred), confusion_matrix(y_test, svm_pred), y_test, rf_pred, knn_pred, svm_pred)
+#print_model_evaluation(rf_f1, knn_f1, svm_f1, confusion_matrix(y_test, rf_pred), confusion_matrix(y_test, knn_pred), confusion_matrix(y_test, svm_pred), y_test, rf_pred, knn_pred, svm_pred)
 
 ##================## Comparação de modelos ##================##
 
@@ -211,4 +211,4 @@ ax.axis('off')
 ax.table(cellText=df_results.values, colLabels=df_results.columns, cellLoc='center', loc='center')
 
 # Exibindo a tabela
-plt.show()
+#plt.show()
